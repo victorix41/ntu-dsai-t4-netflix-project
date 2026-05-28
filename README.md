@@ -81,3 +81,33 @@ pip install -r requirements.txt
 Google Cloud authentication will use local gcloud login.
 
 Kaggle credentials must be configured locally and must not be committed to GitHub.
+
+## Python environment rule
+
+Each teammate should create their own local Python environment on their own machine.
+
+The `.venv/` folder is local only and should not be pushed to GitHub.
+
+The shared setup file is:
+
+requirements.txt
+
+This means everyone uses the same package list, but each person installs those packages into their own local environment.
+
+Recommended setup on WSL / Mac / Linux:
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+Recommended setup on Windows PowerShell:
+
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+Simple explanation:
+GitHub stores the recipe.
+requirements.txt stores the ingredient list.
+Each person's .venv is their own kitchen.
+Do not upload your kitchen to GitHub.
