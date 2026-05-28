@@ -1,0 +1,8 @@
+kaggle
+google-cloud-storage
+google-cloud-bigquery
+python-dotenv
+pandas
+dbt-bigquery
+streamlit
+ipykernel
