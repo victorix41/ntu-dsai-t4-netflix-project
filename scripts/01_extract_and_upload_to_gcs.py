@@ -65,9 +65,11 @@ def load_project_config():
     """
 
     # Load variables from .env into the current Python process.
+    # opens your local .env file and loads the values into Python.
     load_dotenv()
 
-    # Read settings from .env.
+    # Read settings from .env. stores them in a dictionary called config.
+    # os.getenv("GCP_PROJECT_ID") asks Python: “Do you know a setting called GCP_PROJECT_ID?”
     config = {
         "gcp_project_id": os.getenv("GCP_PROJECT_ID"),
         "gcp_location": os.getenv("GCP_LOCATION"),
@@ -80,10 +82,12 @@ def load_project_config():
     # Check whether any required config value is missing.
     missing_keys = []
 
+    # loops through every config setting and checks missing and blank values
     for key, value in config.items():
         if value is None or value.strip() == "":
             missing_keys.append(key)
 
+    # if there are mssing/blank values, display error message
     if missing_keys:
         raise ValueError(
             "Missing required config values in .env: "
@@ -92,11 +96,9 @@ def load_project_config():
 
     return config
 
-
 def print_config_summary(config):
     """
     Print a simple summary of the loaded configuration.
-
     This helps us confirm that the script is reading the correct project,
     bucket, Kaggle dataset, and local file path before we do anything dangerous.
     """
@@ -108,7 +110,6 @@ def print_config_summary(config):
     print(f"GCS object path     : {config['gcs_raw_object_path']}")
     print(f"Kaggle dataset slug : {config['kaggle_dataset_slug']}")
     print(f"Local raw file path : {config['local_raw_file']}")
-
 
 def prepare_local_raw_folder(local_raw_file_path):
     """
@@ -130,22 +131,18 @@ def prepare_local_raw_folder(local_raw_file_path):
     local_raw_folder = local_raw_file_path.parent
 
     # mkdir creates the folder.
-    #
     # parents=True means:
     # "If parent folders do not exist, create them too."
-    #
-    # exist_ok=True means:
-    # "If the folder already exists, do not crash."
+    # # exist_ok=True means:
+    # "If the folder already exists, do not panic."
     local_raw_folder.mkdir(parents=True, exist_ok=True)
 
     print("Local raw folder is ready.")
     print(f"Folder path: {local_raw_folder}\n")
 
-
 def check_kaggle_authentication(kaggle_dataset_slug):
     """
     Check that Kaggle authentication works before we try to download anything.
-
     Kaggle authentication can be set up in different ways depending on Kaggle CLI version.
 
     Common options:
@@ -156,18 +153,21 @@ def check_kaggle_authentication(kaggle_dataset_slug):
        ~/.kaggle/kaggle.json or Kaggle's newer local token file
 
     We do NOT hardcode credentials in this script.
-    We simply ask the Kaggle API client to authenticate using whatever valid
+    Ask the Kaggle API client to authenticate using whatever is valid
     local Kaggle credentials are already configured.
     """
 
     print("Checking Kaggle authentication...")
 
     # Create a Kaggle API client object.
+    # KaggleApi() creates a Kaggle API object.
     api = KaggleApi()
 
     try:
         # Authenticate using locally configured Kaggle credentials.
         # If authentication is missing or invalid, Kaggle will raise an error.
+        # If there is an error, catch error
+        # Go to the next section and ask user to use 'kaggle auth login'
         api.authenticate()
 
     except Exception as error:
@@ -187,7 +187,8 @@ def check_kaggle_authentication(kaggle_dataset_slug):
 
     try:
         # Ask Kaggle to list the files inside the dataset.
-        # This is a light check. It does NOT download the dataset yet.
+        # This is a light check. It does not download the dataset yet.
+        # the dataset slug is shivamb/netflix-shows
         dataset_files_response = api.dataset_list_files(kaggle_dataset_slug)
 
     except Exception as error:
@@ -202,11 +203,13 @@ def check_kaggle_authentication(kaggle_dataset_slug):
         )
 
     # Kaggle returns file objects, not plain strings.
-    # We extract the file names so humans can read them easily.
+    # We extract the file names so we can read them easily.
     dataset_files = dataset_files_response.files
 
     file_names = []
 
+    # Response from Kaggle is more like a list of file objects, where each object has a .name.
+    # loop through the file objects, build a clean list of file names and display them
     for dataset_file in dataset_files:
         file_names.append(dataset_file.name)
 
@@ -217,10 +220,10 @@ def check_kaggle_authentication(kaggle_dataset_slug):
     for file_name in file_names:
         print(f"- {file_name}")
 
-    # For this project, we expect netflix_titles.csv.
-    # If it is missing, we should stop early instead of pretending everything is fine.
+    # For this project, we expect to see this specific netflix_titles.csv file
     expected_file_name = "netflix_titles.csv"
 
+    # If it is missing, we should stop early instead of pretending everything is fine
     if expected_file_name not in file_names:
         raise FileNotFoundError(
             f"Expected file '{expected_file_name}' was not found in Kaggle dataset "
@@ -230,6 +233,7 @@ def check_kaggle_authentication(kaggle_dataset_slug):
     print(f"\nExpected file found: {expected_file_name}\n")
 
     # Return the authenticated API object so later functions can reuse it.
+    # The function sends the authenticated Kaggle API object back to main().
     return api
 
 def download_kaggle_csv(api, kaggle_dataset_slug, local_raw_file_path):
@@ -237,7 +241,6 @@ def download_kaggle_csv(api, kaggle_dataset_slug, local_raw_file_path):
     Download netflix_titles.csv from the Kaggle dataset into our local raw folder.
 
     Official local output:
-
         data/raw/netflix_titles.csv
 
     Important:
@@ -251,7 +254,6 @@ def download_kaggle_csv(api, kaggle_dataset_slug, local_raw_file_path):
 
     Important Kaggle behaviour:
     Kaggle may download the CSV as a zipped file:
-
         netflix_titles.csv.zip
 
     So this function handles both cases:
@@ -265,28 +267,37 @@ def download_kaggle_csv(api, kaggle_dataset_slug, local_raw_file_path):
     kaggle_file_name = "netflix_titles.csv"
 
     # The folder where the file should be downloaded.
+    # which should be data/raw
     local_raw_folder = local_raw_file_path.parent
 
     # Kaggle sometimes saves the file as netflix_titles.csv.zip.
+    # we need to handle if this situation arises
     downloaded_zip_path = local_raw_folder / f"{kaggle_file_name}.zip"
    
     # Remove old local copies before downloading again.
-    #
-    # Why?
-    # If an old CSV already exists, the script might accidentally verify yesterday's file
+    # Why? If an old CSV already exists, the script might accidentally verify yesterday's file
     # instead of the file we just downloaded.
-    #
     # This keeps each run fresh and repeatable.
     stale_local_files = [
         local_raw_file_path,
         downloaded_zip_path,
     ]
 
+    # remove the following if found:
+    # data/raw/netflix_titles.csv
+    # data/raw/netflix_titles.csv.zip
     for stale_file in stale_local_files:
         if stale_file.exists():
             print(f"Removing old local file before fresh download: {stale_file}")
             stale_file.unlink()
+
+    # the actual download
     # Download one file from the Kaggle dataset.
+    # dataset=kaggle_dataset_slug - Which Kaggle dataset to use.
+    # file_name=kaggle_file_name - Which file inside that dataset to download.
+    # path=str(local_raw_folder) - Where to save it locally.
+    # force=True - Overwrite existing download if needed.
+    # quiet=False - Show progress messages.
     api.dataset_download_file(
         dataset=kaggle_dataset_slug,
         file_name=kaggle_file_name,
@@ -295,15 +306,15 @@ def download_kaggle_csv(api, kaggle_dataset_slug, local_raw_file_path):
         quiet=False,
     )
 
-    # Case 1:
+    # Situation 1:
     # Kaggle downloaded the CSV directly.
     if local_raw_file_path.exists():
         print("Kaggle CSV downloaded directly.")
         print(f"Local file path: {local_raw_file_path}\n")
         return
 
-    # Case 2:
-    # Kaggle downloaded a zip file instead.
+    # Situation 2:
+    # Kaggle downloaded a zip file instead. :(
     if downloaded_zip_path.exists():
         print("Kaggle downloaded a zip file.")
         print(f"Zip file path: {downloaded_zip_path}")
@@ -317,6 +328,7 @@ def download_kaggle_csv(api, kaggle_dataset_slug, local_raw_file_path):
 
     # Final check:
     # After direct download or unzip, the official CSV path must exist.
+    # Does data/raw/netflix_titles.csv exist now? if yes, skip the filenotfounderror
     if not local_raw_file_path.exists():
         raise FileNotFoundError(
             "Expected downloaded CSV was not found after Kaggle download/unzip.\n"
@@ -327,11 +339,9 @@ def download_kaggle_csv(api, kaggle_dataset_slug, local_raw_file_path):
     print("Kaggle CSV downloaded and prepared successfully.")
     print(f"Local file path: {local_raw_file_path}\n")
 
-
 def verify_local_csv(local_raw_file_path):
     """
     Verify the local raw CSV after download.
-
     This is a light sanity check only.
 
     We check:
@@ -347,28 +357,29 @@ def verify_local_csv(local_raw_file_path):
     print("Verifying local CSV...")
 
     # Check that the file exists.
+    # local_raw_file_path = data/raw/netflix_titles.csv
+    # not a plain string, earlier in main(), we converted it into a Path object
+    # do a check if the file exists
     if not local_raw_file_path.exists():
         raise FileNotFoundError(
             f"Local raw CSV does not exist: {local_raw_file_path}"
         )
 
-    # Get file size in bytes.
+    # Check the file size, get file size in bytes. we may get a file but is empty
     file_size_bytes = local_raw_file_path.stat().st_size
-
     if file_size_bytes == 0:
         raise ValueError(
             f"Local raw CSV exists but is empty: {local_raw_file_path}"
         )
 
     # Read the CSV using pandas.
-    #
-    # This dataset is small, so pandas is fine here.
+    # This dataset is small, so using pandas is fine here.
     # We are only reading it to check row count and columns.
     df = pd.read_csv(local_raw_file_path)
-
     row_count = len(df)
     column_names = list(df.columns)
 
+    # based on the metadata, we know that we expect these columns in the data
     expected_columns = [
         "show_id",
         "type",
@@ -384,12 +395,13 @@ def verify_local_csv(local_raw_file_path):
         "description",
     ]
 
+    # we do amissing column check, if there is a missing column, we add it to missing_columns
     missing_columns = []
-
     for column in expected_columns:
         if column not in column_names:
             missing_columns.append(column)
 
+    # raise an error if there are missing columns
     if missing_columns:
         raise ValueError(
             "Local CSV is missing expected columns: "
@@ -407,13 +419,10 @@ def verify_local_csv(local_raw_file_path):
 
     print()
 
-
 def upload_csv_to_gcs(config, local_raw_file_path):
     """
     Upload the verified local raw CSV to Google Cloud Storage.
-
     Official upload target:
-
         gs://ntu-dsai-t4-netflix-raw-001/raw/netflix_titles.csv
 
     Important:
@@ -434,7 +443,7 @@ def upload_csv_to_gcs(config, local_raw_file_path):
             f"Cannot upload because local raw CSV does not exist: {local_raw_file_path}"
         )
 
-    # Read GCP/GCS settings from config.
+    # Read GCP/GCS settings from config file input
     gcp_project_id = config["gcp_project_id"]
     gcs_bucket_name = config["gcs_bucket_name"]
     gcs_raw_object_path = config["gcs_raw_object_path"]
@@ -447,31 +456,25 @@ def upload_csv_to_gcs(config, local_raw_file_path):
     print(f"Source local file : {local_raw_file_path}")
     print(f"Target GCS URI    : {gcs_uri}")
 
-    # Create a Google Cloud Storage client.
-    #
+    # Create a Google Cloud Storage client, Python client that can talk to Google Cloud Storage.
     # This uses your local Google authentication from:
     # gcloud auth application-default login
     storage_client = storage.Client(project=gcp_project_id)
 
     # Get the bucket object.
-    #
     # This does not download or upload anything yet.
     # It simply points Python at the bucket name.
     bucket = storage_client.bucket(gcs_bucket_name)
 
     # Create a blob object.
-    #
     # In GCS language, a "blob" is a file/object inside a bucket.
-    #
     # Bucket:
     #   ntu-dsai-t4-netflix-raw-001
-    #
     # Blob/object path:
     #   raw/netflix_titles.csv
     blob = bucket.blob(gcs_raw_object_path)
 
     # Upload the local CSV file into the GCS blob path.
-    #
     # content_type="text/csv" tells GCS that this object is a CSV file.
     blob.upload_from_filename(
         filename=str(local_raw_file_path),
@@ -483,16 +486,13 @@ def upload_csv_to_gcs(config, local_raw_file_path):
 
     return gcs_uri
 
-
 def verify_gcs_upload(config):
     """
     Verify that the raw CSV exists in Google Cloud Storage after upload.
-
     We check:
     1. The GCS object exists.
     2. GCS metadata can be loaded.
     3. Object size is greater than 0.
-
     This confirms that the upload worked before we move to BigQuery loading.
     """
 
@@ -548,10 +548,12 @@ def main():
     """
 
     # Section 1: Load and print config.
+    # Reads your .env file and stores important settings inside a Python dictionary.
     config = load_project_config()
     print_config_summary(config)
 
     # Convert the local raw file string into a Path object.
+    # Turns the text "data/raw/netflix_titles.csv" into a proper Python path object
     local_raw_file_path = Path(config["local_raw_file"])
 
     print("Local raw file path as Path object:")
@@ -559,12 +561,15 @@ def main():
     print()
 
     # Section 2A: Prepare local folder.
+    # Makes sure the folder data/raw/ exists before downloading anything.
     prepare_local_raw_folder(local_raw_file_path)
 
     # Section 2B: Check Kaggle authentication.
+    # Logs into Kaggle and checks that the dataset is reachable.
     api = check_kaggle_authentication(config["kaggle_dataset_slug"])
 
     # Section 3A: Download the Kaggle CSV locally.
+    # Downloads netflix_titles.csv from Kaggle. If Kaggle gives a zip file, it unzips it.
     download_kaggle_csv(
         api=api,
         kaggle_dataset_slug=config["kaggle_dataset_slug"],
@@ -572,15 +577,18 @@ def main():
     )
 
     # Section 3B: Verify the downloaded local CSV.
+    # Checks that the local CSV exists, is not empty, has 8,807 rows, and has the expected 12 columns.
     verify_local_csv(local_raw_file_path)
 
     # Section 4: Upload the verified local CSV to GCS.
+    # Uploads the local CSV into Google Cloud Storage.
     upload_csv_to_gcs(
         config=config,
         local_raw_file_path=local_raw_file_path,
     )
 
     # Section 5: Verify the file exists in GCS.
+    # Checks that the uploaded file really exists in GCS and is not empty.
     verify_gcs_upload(config)
 
     print("Blocks 1/2 complete. Kaggle CSV has been downloaded locally and uploaded to GCS.")
