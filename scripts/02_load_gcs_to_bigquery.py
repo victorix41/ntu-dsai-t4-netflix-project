@@ -28,7 +28,6 @@ not short and clever. Clever code is nice until it becomes tomorrow's "who wrote
 import os
 
 # load_dotenv reads key-value pairs from our local .env file.
-#
 # Example:
 # GCP_PROJECT_ID=ntu-dsai-t4-netflix
 #
@@ -37,7 +36,6 @@ import os
 from dotenv import load_dotenv
 
 # bigquery lets Python talk to Google BigQuery.
-#
 # We use it here to:
 # 1. Load the CSV from GCS into BigQuery.
 # 2. Check whether the target table exists.
@@ -88,7 +86,6 @@ def load_project_config():
 
     return config
 
-
 def build_gcs_uri(config):
     """
     Build the full GCS URI for the raw CSV file.
@@ -108,7 +105,6 @@ def build_gcs_uri(config):
     )
 
     return gcs_uri
-
 
 def build_bigquery_table_id(config):
     """
@@ -130,7 +126,6 @@ def build_bigquery_table_id(config):
     )
 
     return table_id
-
 
 def print_config_summary(config, gcs_uri, table_id):
     """
@@ -172,7 +167,6 @@ def create_bigquery_client(config):
     print(f"Client project: {client.project}\n")
 
     return client
-
 
 def check_bigquery_dataset_exists(client, config):
     """
@@ -499,7 +493,6 @@ def verify_bigquery_raw_table(client, table_id):
     print("BigQuery raw table verification successful.")
     print()
 
-
 def main():
     """
     Main function for Block 3.
@@ -517,15 +510,17 @@ def main():
     """
 
     # Section 1: Load config from .env.
+    # Reads your .env file and loads settings like GCP project, bucket name, 
+    # GCS object path, BigQuery dataset, and BigQuery table.
     config = load_project_config()
 
-    # Section 2: Build the GCS source URI.
+    # Section 2: Build the full GCS source URI.
     gcs_uri = build_gcs_uri(config)
 
-    # Section 3: Build the BigQuery target table ID.
+    # Section 3: Build the full BigQuery target table ID.
     table_id = build_bigquery_table_id(config)
 
-    # Section 4: Print config summary for human checking.
+    # Section 4: Print config summary for sanity checking
     print_config_summary(
         config=config,
         gcs_uri=gcs_uri,
@@ -533,15 +528,18 @@ def main():
     )
 
     # Section 5: Create BigQuery client.
+    # Creates the Python connection to BigQuery.
     client = create_bigquery_client(config)
 
     # Section 6: Check that the raw dataset exists.
+    # Checks that the raw dataset exists before trying to load into it.
     check_bigquery_dataset_exists(
         client=client,
         config=config,
     )
 
     # Section 7: Load the GCS CSV into BigQuery raw table.
+    # Loads the CSV from GCS into BigQuery using the explicit schema.
     load_gcs_csv_to_bigquery(
         client=client,
         config=config,
@@ -550,12 +548,14 @@ def main():
     )
 
     # Section 8: Verify the loaded BigQuery raw table.
+    # Loads the CSV from GCS into BigQuery using the explicit schema.
     verify_bigquery_raw_table(
         client=client,
         table_id=table_id,
     )
 
     print("Block 3 complete. GCS CSV has been loaded into BigQuery raw table and verified.")
+
 # Only run main() when this file is executed directly.
 if __name__ == "__main__":
     main()
