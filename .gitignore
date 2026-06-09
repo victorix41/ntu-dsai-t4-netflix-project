@@ -38,3 +38,4 @@ data/raw/*
 
 # ntu-dsai-netflix-runner-key.json is a specific file that contains sensitive credentials for the Netflix project. It should be ignored to prevent accidental exposure of sensitive information.
 ntu-dsai-netflix-runner-key.json
+*:Zone.Identifier
