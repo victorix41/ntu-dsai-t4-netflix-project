@@ -1,0 +1,30 @@
+[0m12:11:31.170477 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7436b6d7c190>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7436b6d6df10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7436b6bd53d0>]}
+
+
+============================== 12:11:31.179471 | 749c254f-51a4-41ba-9cc7-75c17aec2d21 ==============================
+[0m12:11:31.179471 [info ] [MainThread]: Running with dbt=1.10.9
+[0m12:11:31.181059 [debug] [MainThread]: running dbt with arguments {'target_path': 'None', 'cache_selected_only': 'False', 'use_colors': 'True', 'quiet': 'False', 'use_experimental_parser': 'False', 'send_anonymous_usage_stats': 'True', 'introspect': 'True', 'static_parser': 'True', 'log_format': 'default', 'no_print': 'None', 'log_cache_events': 'False', 'write_json': 'True', 'debug': 'False', 'indirect_selection': 'eager', 'empty': 'None', 'profiles_dir': '/home/hweekian/.dbt', 'invocation_command': 'dbt init dbt_netflix', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'version_check': 'True', 'log_path': 'logs', 'fail_fast': 'False', 'partial_parse': 'True', 'warn_error': 'None', 'printer_width': '80'}
+[0m12:11:31.266563 [debug] [MainThread]: Starter project path: /home/hweekian/miniconda3/envs/elt/lib/python3.11/site-packages/dbt/include/starter_project
+[0m12:11:31.286229 [info ] [MainThread]: 
+Your new dbt project "dbt_netflix" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m12:11:31.287524 [info ] [MainThread]: Setting up your profile.
+[0m12:21:25.678794 [info ] [MainThread]: Profile dbt_netflix written to /home/hweekian/.dbt/profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m12:21:25.685552 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 593.9894, "process_in_blocks": "464688", "process_kernel_time": 18.90246, "process_mem_max_rss": "374740", "process_out_blocks": "80", "process_user_time": 28.905132}
+[0m12:21:25.690436 [debug] [MainThread]: Command `dbt init` succeeded at 12:21:25.689566 after 593.99 seconds
+[0m12:21:25.696398 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7436b6bd57d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7436bb62bf50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7436bb4f8b50>]}
+[0m12:21:25.702026 [debug] [MainThread]: Flushing usage events
+[0m12:21:27.049073 [debug] [MainThread]: An error was encountered while trying to flush usage events
