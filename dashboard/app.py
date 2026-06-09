@@ -18,7 +18,7 @@ st.set_page_config(
 )
 # Display a local image and set a custom width
 st.image('assets/Netflix_Logo_RGB.png', width=200)
-st.title("Analysis of Netflix Content Strategy")
+st.title(" -DRAFT VER. NOT COMPLETE-  Analysis of Netflix Content Strategy")
 st.markdown('### From a public dataset - <a href="https://www.kaggle.com/datasets/shivamb/netflix-shows/data">Netflix</a>', unsafe_allow_html=True)
 st.caption("DSAI- 3F TEAM 4 -- Kenny - Valerie - Hwee Kian - Daniel - Kum Seng - Neville.")
 st.markdown("---")
