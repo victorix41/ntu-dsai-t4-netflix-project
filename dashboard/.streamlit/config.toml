@@ -1,0 +1,13 @@
+[theme]
+# this config.toml is a hidden file. it will be handled by Streamlit in the background
+# Corporate accent color (logo red)
+
+base = "light" # or dark theme
+primaryColor = "#FF0000" # Set your desired color
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#000000" # sidebar background
+textColor = "#000000" # black text on white background
+secondaryTextColor = "#FFFFFF"     # white text on black sidebar
+font = "sans serif"    # limited choice of font types
+borderColor = "#D3D3D3"    # widget borders
+borderRadius = 4            
