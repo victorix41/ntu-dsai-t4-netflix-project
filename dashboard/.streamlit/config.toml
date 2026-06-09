@@ -10,4 +10,4 @@ textColor = "#000000" # black text on white background
 secondaryTextColor = "#FFFFFF"     # white text on black sidebar
 font = "sans serif"    # limited choice of font types
 borderColor = "#D3D3D3"    # widget borders
-borderRadius = 4            
+borderRadius = 4

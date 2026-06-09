@@ -3,11 +3,6 @@ from google.cloud import bigquery
 from google.oauth2 import service_account
 import pandas as pd
 
-# streanlit theme
-# primaryColor = "#1E90FF" # Set your desired color
-# backgroundColor = "#080808"
-# secondaryBackgroundColor = "#F5F5F5"
-# textColor = "#FFFFFF"
 
 # 1. Page config
 st.set_page_config(
@@ -120,7 +115,6 @@ df_clean = df.dropna(subset=['year_added'])
 df_clean['year_added'] = df_clean['year_added'].astype(int)
 
 
-
 # 2. Setup a Yearly Integer Slider
 min_year = int(df_clean['year_added'].min())
 max_year = int(df_clean['year_added'].max())
@@ -168,7 +162,7 @@ if not chart_data.empty:
 else:
     st.warning("No data available for the selected year range.")
 
-
+st.markdown("Business : What is the current situation?")
 st.markdown("Key Observations:")
 st.markdown("4. Movie adding trend peaked at 1400 Movies in 2019, but suffered a sharp decline to less than 1000 in 2021.")
 st.markdown("5. TV Shows adding trend peaked at less than 600 TV Shows a year between 2019 and 2020, but levels off to just above 500 in 2021")
