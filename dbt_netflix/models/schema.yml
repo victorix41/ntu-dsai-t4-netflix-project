@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: fact_showlist
+    description: "Fact table for netflix show list."
+    columns:
+      - name: show_id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null

@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: raw
+    database: ntu-dsai-t4-netflix
+    tables:
+      - name: netflix_titles
+      

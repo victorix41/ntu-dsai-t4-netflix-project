@@ -1,0 +1,29 @@
+models:
+  - name: dim_showtitle
+    columns:
+      - name: title
+        data_tests:
+          - not_null
+      - name: director
+        data_tests:
+          - not_null
+  - name: dim_showgenre
+    columns:
+      - name: genre
+        data_tests:
+          - not_null
+  - name: dim_showcountry
+    columns:
+      - name: country
+        data_tests:
+          - not_null
+  - name: dim_agerating
+    columns:
+      - name: rating
+        data_tests:
+          - not_null
+  - name: dim_showcast
+    columns:
+      - name: cast_name
+        data_tests:
+          - not_null
