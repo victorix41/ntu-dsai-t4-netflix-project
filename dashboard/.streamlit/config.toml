@@ -3,11 +3,11 @@
 # Corporate accent color (logo red)
 
 base = "light" # or dark theme
-primaryColor = "#FF0000" # Set your desired color
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#000000" # sidebar background
-textColor = "#000000" # black text on white background
-secondaryTextColor = "#FFFFFF"     # white text on black sidebar
+primaryColor = "#E50914" # Set your desired color
+backgroundColor = "#eaeded9e"
+secondaryBackgroundColor = "#1c1c1c46" # sidebar background
+textColor = "#1C1C1C" # black text on white background
+secondaryTextColor = "#D3D3D3"     # white text on black sidebar
 font = "sans serif"    # limited choice of font types
-borderColor = "#D3D3D3"    # widget borders
+borderColor = "#FFB6C1"    # widget borders
 borderRadius = 4
