@@ -1,0 +1,14 @@
+dbt_netflix:
+  outputs:
+    dev:
+      dataset: analytics
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: $HOME/.config/ntu-dsai/ntu-dsai-netflix-runner-key.json
+      location: US
+      method: service-account
+      priority: interactive
+      project: ntu-dsai-t4-netflix
+      threads: 1
+      type: bigquery
+  target: dev
