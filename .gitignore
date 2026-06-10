@@ -66,3 +66,6 @@ netflix_dagster/pipeline_logs/
 
 # Exclude localized configuration environmental secret variables
 .env
+
+# Exclude raw local dataset files
+netflix_dagster/data/
