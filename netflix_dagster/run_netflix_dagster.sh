@@ -13,8 +13,8 @@ ACTIVE_ENV="${CONDA_DEFAULT_ENV:-dagster}"
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate "${ACTIVE_ENV}"
 
-# 5. Route your background Python SDK directly to your local user login file (WSL local path)
-export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/ntu-dsai/ntu-dsai-netflix-runner-key.json"
+# 5. Ignore any manually exported service-account key and use ADC from `gcloud auth application-default login`.
+unset GOOGLE_APPLICATION_CREDENTIALS
 
 # 6. Step directly into the script's directory folder to launch materialization
 cd "${SCRIPT_DIR_PATH}"
