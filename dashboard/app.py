@@ -13,10 +13,20 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+# Destination link intro
+
+st.markdown(" ")
+st.markdown("<div id='Intro'></div>", unsafe_allow_html=True)
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+
 # display title
-st.title("Data Analytics for Netflix Content Strategy")
-st.markdown('### From a public dataset - <a href="https://www.kaggle.com/datasets/shivamb/netflix-shows/data">Netflix</a>', unsafe_allow_html=True)
-st.caption("DSAI- 3F TEAM 4 -- Kenny - Valerie - Hwee Kian - Daniel - Kum Seng - Neville.")
+st.title("Data Analytics Report")
+st.markdown("### for Netflix Content Strategy Planning")
+st.markdown('##### Source: <a href="https://www.kaggle.com/datasets/shivamb/netflix-shows/data">Netflix</a> public dataset', unsafe_allow_html=True)
+st.markdown("##### DSAI- 3F TEAM 4 -- Kenny - Valerie - Hwee Kian - Daniel - Kum Seng - Neville.")
 st.markdown("---")
 
 # 2. Secure authentication & client initialization
@@ -70,6 +80,23 @@ def get_base64_image(image_path):
         # Fallback if the path is slightly off during testing
         return ""
 
+# Custom CSS to make the slider track visible against the dark sidebar background
+# st.markdown(
+#     """
+#     <style>
+#     /* Targets the unselected background track line */
+#     div[data-baseweb="slider"] > div:first-child {
+#         background: rgba(255, 255, 255, 0.1) !important;
+#     }
+    
+#     /* Optional: Changes the tick mark label numbers to a clear white/grey if they look dim */
+#     div[data-testid="stSlider"] label {
+#         color: #000000 !important;
+#     }
+#     </style>
+#     """,
+#     unsafe_allow_html=True
+# )
 
 # 2. Convert local asset file
 local_image_path = "assets/Netflix_Logo_RGB.png"
@@ -88,10 +115,8 @@ if img_base64:
 else:
     st.sidebar.error(f"Could not find logo at {local_image_path}")
 
-# Your existing filter code follows below..
-
 # 4. Sidebar Dynamic Filtering Layer
-st.sidebar.header("Filter Content")
+st.sidebar.header("Content Filters")
 
 # Content Type Filter (Movie vs TV Show)
 available_types = df['type'].dropna().unique().tolist()
@@ -114,11 +139,13 @@ if selected_genres:
     filtered_df = filtered_df[filtered_df['genres'].apply(
         lambda x: any(genre in str(x) for genre in selected_genres) if pd.notnull(x) else False
     )]
+
 # Quick Introduction to Netflix
-st.markdown("### Quick Introduction to Netflix")
+st.markdown("<h3>Quick Introduction to Netflix (2015-2021)</h3>", unsafe_allow_html=True)
 st.markdown("1. Started as a DVD-by-mail video rental service in 1997 by Hastings and Randolf, but was shutdown in 2023")
 st.markdown("2. Is considered the king of streaming, alongside YouTube, though they have different strengths.")
 st.markdown("3. Over 70% of its membership base resides outside the United States and is fast expanding, particularly in the fast growing Asia-Pacific market.")
+
 
 # 6. Dashboard Layout Elements
 # Summary KPI Cards
@@ -126,14 +153,24 @@ total_titles = len(filtered_df)
 movies_count = len(filtered_df[filtered_df['type'] == 'Movie'])
 shows_count = len(filtered_df[filtered_df['type'] == 'TV Show'])
 
-st.markdown("### Movies and TV Shows added annually, up to 2021")
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.metric("Total Catalog Titles", f"{total_titles:,}")
-with col2:
-    st.metric("Total Movies", f"{movies_count:,}")
-with col3:
-    st.metric("Total TV Shows", f"{shows_count:,}")
+# pad with space on top
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+# Destination link 1
+st.markdown("<div id='Insights 1'></div>", unsafe_allow_html=True)
+
+
+# st.markdown("### Catalog Title additions, yearly, up to 2021")
+# col1, col2, col3 = st.columns(3)
+# with col1:
+#     st.metric("Total Catalog Titles", f"{total_titles:,}")
+# with col2:
+#     st.metric("Total Movies", f"{movies_count:,}")
+# with col3:
+#     st.metric("Total TV Shows", f"{shows_count:,}")
 
 # Assuming 'df' is your loaded DataFrame from load_netflix_data()
 # 1. Convert to datetime and extract the year as an integer
@@ -149,16 +186,16 @@ min_year = int(df_clean['year_added'].min())
 max_year = int(df_clean['year_added'].max())
 
 # Inject custom CSS to turn the slider label text white
-st.markdown(
-    """
-    <style>
-        div[data-testid="stSidebar"] div[data-testid="stSlider"] p {
-            color: white !important;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# st.markdown(
+#     """
+#     <style>
+#         div[data-testid="stSidebar"] div[data-testid="stSlider"] p {
+#             color: white !important;
+#         }
+#     </style>
+#     """,
+#     unsafe_allow_html=True
+# )
 
 # --- 1. GET SLIDER VALUES ---
 selected_year_range = st.sidebar.slider(
@@ -175,9 +212,9 @@ start_year, end_year = selected_year_range
 # --- 2. FILTER & AGGREGATE DATA GLOBALLY ---
 # Filter by Year Added and then group
 df_added_filtered = df_clean[
-    (df_clean['year_added'] >= start_year) & 
-    (df_clean['year_added'] <= end_year)
+    (df_clean['year_added'] >= start_year) & (df_clean['year_added'] <= end_year)
 ]
+
 df_added = df_added_filtered.groupby(['year_added', 'type']).size().reset_index(name='Count')
 
 # Filter by Release Year and then group
@@ -187,85 +224,95 @@ df_release_filtered = df_clean[
 ]
 df_release = df_release_filtered.groupby(['release_year', 'type']).size().reset_index(name='Count')
 
-
-# --- 3. PLOT THE FILTERED DATA ---
-view_option = st.selectbox(
-    "Choose Timeline Metric:",
-    ["Show Trends by Date Added to Netflix", "Show Trends by Content Release Year"]
+# Add links to sidebar for next sections
+st.sidebar.markdown(
+    '<a href="#Intro" style="display: block; text-align: center; color: #E50914; font-weight: bold; text-decoration: none;"> Intro</a>', 
+    unsafe_allow_html=True
+)
+st.sidebar.markdown(
+    '<a href="#Insights 1" style="display: block; text-align: center; color: #E50914; font-weight: bold; text-decoration: none;"> Insights 1</a>', 
+    unsafe_allow_html=True
+)
+st.sidebar.markdown(
+    '<a href="#Insights 2" style="display: block; text-align: center; color: #E50914; font-weight: bold; text-decoration: none;"> Insights 2</a>', 
+    unsafe_allow_html=True
 )
 
-if "Date Added" in view_option:
-    fig = px.line(
-        df_added,  # Uses the filtered dataframe
-        x="year_added",
-        y="Count",
-        color="type",
-        title=f"Content Added to Netflix ({start_year} - {end_year})",
-        labels={"year_added": "Year Added", "Count": "Total Titles"},
-        color_discrete_map={"Movie": "#E50914", "TV Show": "#00C853"},
-        markers=True
-    )
-else:
-    fig = px.line(
-        df_release,  # Uses the filtered dataframe
-        x="release_year",
-        y="Count",
-        color="type",
-        title=f"Content Trends by Original Release Year ({start_year} - {end_year})",
-        labels={"release_year": "Original Release Year", "Count": "Total Titles"},
-        color_discrete_map={"Movie": "#E50914", "TV Show": "#00C853"},
-        markers=True
-    )
 
-st.plotly_chart(fig, use_container_width=True)
-# ----
+# ==========================================
+# MOVIES AND TV SHOWS ADDED ANNUALLY
+# ==========================================
+st.markdown("<div id='Insights 1'></div>", unsafe_allow_html=True)
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+st.markdown("<h3>Content Added to Netflix (2015-2021)</h3>", unsafe_allow_html=True)
+# 1. Display your KPI metric blocks
+col_kpi1, col_kpi2, col_kpi3 = st.columns(3)
+with col_kpi1:
+    st.metric("Total Catalog Titles", "8,807")
+with col_kpi2:
+    st.metric("Total Movies", "6,131")
+with col_kpi3:
+    st.metric("Total TV Shows", "2,676")
 
-# ----
-# 3. Filter the DataFrame based on the selected years
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+
+# 2. Grab your existing global sidebar slider values
 start_year, end_year = selected_year_range
-filtered_chart_df = df_clean[
-    (df_clean['year_added'] >= start_year) & 
-    (df_clean['year_added'] <= end_year)
+
+# 3. Filter the primary DataFrame based on the global sidebar selection
+df_filtered_timeline = df_clean[
+    (df_clean["year_added"] >= start_year) & (df_clean["year_added"] <= end_year)
 ]
 
-# 4. Transform data: Group by the extracted year and type, then count
-chart_data = (
-    filtered_chart_df.groupby(['year_added', 'type'])
+# 4. Process data into counts per year per type
+df_timeline_counts = (
+    df_filtered_timeline.groupby(["year_added", "type"])
     .size()
-    .unstack(fill_value=0)  # Pivots 'type' into columns (Movie, TV Show)
+    .reset_index(name="Total Titles")
+    .rename(columns={"year_added": "Year Added"})
 )
 
-# 5. Display the Interactive Yearly Area Chart
-if not chart_data.empty:
-    # 🚀 Get the exact column order from your pivoted data (e.g., ['Movie', 'TV Show'])
-    columns_in_order = chart_data.columns.tolist()
-    
-    # Map out your colors based on that exact order
-    color_palette = []
-    for col in columns_in_order:
-        if col == "Movie":
-            color_palette.append("#8B0000")  # Pink hex code
-        elif col == "TV Show":
-            color_palette.append("#1C1C1C")  # Peach hex code
-        else:
-            color_palette.append("#FF4C4C")  # Fallback blue
-            
-    # Pass the clean list of colors to the chart
-    st.area_chart(chart_data, color=color_palette)
-else:
-    st.warning("No data available for the selected year range.")
+# 5. Render the simplified trend chart directly (No selectbox dropdown!)
+fig_trends = px.line(
+    df_timeline_counts,
+    x="Year Added",
+    y="Total Titles",
+    color="type",
+    title=f"Content Added to Netflix ({start_year} - {end_year})",
+    labels={"Year Added": "Year Added", "Total Titles": "Total Titles"},
+    color_discrete_map={"Movie": "#E50914", "TV Show": "#00C853"},  # Red & Green
+    markers=True,
+)
 
-st.markdown("Business : What is the current situation?")
-st.markdown("Key Observations:")
-st.markdown("4. Movie adding trend peaked at 1400 Movies in 2019, but suffered a sharp decline to less than 1000 in 2021.")
-st.markdown("5. TV Shows adding trend peaked at less than 600 TV Shows a year between 2019 and 2020, but levels off to just above 500 in 2021")
-st.markdown("6. At its peak in 2019, TV Shows were less than a third of Movies. In Two short years, this ratio became more than half of Movies, signifying a shift in content mix.")
+fig_trends.update_layout(
+    hovermode="x unified",
+    xaxis=dict(type="linear", dtick=1, showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
+    yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
+)
+
+st.plotly_chart(fig_trends, use_container_width=True)
+
+# 6. Keep your key observations listed clean underneath
+st.markdown(" ")
+st.markdown("""
+**Key Observations:**
+1. **MOVIES ARE IN SHARP DECLINE:** Movie Additions peaked at 1400 Movies in 2019, but suffered a sharp decline to less than 1000 in 2021.
+2. **TV SHOWS REMAIN STABLE:** TV Shows Additions peaked at less than 600 TV Shows a year between 2019 and 2020, but levels off to just above 500 in 2021.
+3. **GROWTH OF TV SHOWS:** At its peak in 2019, TV Shows were less than a third of Movies. In Two short years, this ratio shot up to more than half of Movies, signifying a shift in content mix.
+4. **CROSSOVER EXPECTED IN 2023-2024 SEASON:** Expect capacity for production of TV Shows due to diminished release of movies.
+""")
 
 # ==============================================================================
 # Global Slider & Side-by-Side Top 10 Country Bar Charts
 # ==============================================================================
-st.write("### Top 10 Countries producing Content")
-
+st.markdown("<h2>Content Added to Netflix (2015-2021)</h2>", unsafe_allow_html=True)
+# Destination link 2
+st.markdown("<div id='Insights 2'></div>", unsafe_allow_html=True)
 # 1. REMOVED the local st.slider widget block completely.
 # It now references your global 'selected_year_range' from the sidebar.
 start_year, end_year = selected_year_range
@@ -294,12 +341,20 @@ if 'countries' in tv_shows_df.columns:
 else:
     top_tv_countries = pd.DataFrame()
 
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+st.markdown("<h3>Top Countries for Content Production</h3>", unsafe_allow_html=True)
+st.markdown(" ")
+st.markdown("Gap between media release_year and date_added to catalog")
 # 6. Create Side-by-Side Layout Columns
 col1, col2 = st.columns(2)
 
 # Left Column: Most Movies
 with col1:
-    st.write("#### Most Movies by Country")
+    st.write("#### Most Movies")
     if not top_movie_countries.empty:
         st.bar_chart(top_movie_countries, color="#FF69B4")  # Movie Pink
     else:
@@ -307,12 +362,17 @@ with col1:
 
 # Right Column: Most TV Shows
 with col2:
-    st.write("#### Most TV Shows by Country")
+    st.write("#### Most TV Shows")
     if not top_tv_countries.empty:
         st.bar_chart(top_tv_countries, color="#FFDAB9")  # TV Show Peach
     else:
         st.warning("No TV Show data available for this range.")
-# ----------------
+
+st.markdown(" ")
+st.markdown(" ")
+st.markdown(" ")
+
+
 
 # --------------------------------------
 # Q5 CHART SHOWING GAP BETWEEN RELEASE_YEAR AND DATE_ADDED
@@ -348,15 +408,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Single global timeline slider in the sidebar (Set to your 2014-2021 window)
-selected_year_range = st.sidebar.slider(
-    "Select Year Range",
-    min_value=min_year,
-    max_value=max_year,
-    value=(2014, 2021),
-    step=1,
-    format="%d"
-)
 
 start_year, end_year = selected_year_range
 
@@ -427,10 +478,10 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("Key Observations:")
 st.markdown("1. Movie catalog dates lag release dates by approx. 2 years as seen from 2017 peak to 2019 peak.")
-st.markdown("1. However, the two TV Shows curves shows almost no lag between catalog and release dates.")
+st.markdown("1. However, TV Shows have almost no lag between release and catalog dates.")
 
 # -------------------
-st.write("### 🎬 Franchise Sequels vs. 📺 TV Show Durations")
+st.write("### Insights from Sequels and Seasons")
 
 # 1. Use your existing global sidebar slider values
 start_year, end_year = selected_year_range
@@ -448,9 +499,9 @@ if not filtered_charts_df.empty:
     # Normalize column names to lowercase to prevent KeyErrors
     filtered_charts_df.columns = filtered_charts_df.columns.str.lower()
     
-    # ==========================================
-    # LEFT CHART: Movie Sequels / Franchise Count
-    # ==========================================
+    # =========================
+    # LEFT CHART: Movie Sequels
+    # =========================
     movies_df = filtered_charts_df[filtered_charts_df["type"].str.lower() == "movie"].copy()
 
     if not movies_df.empty and "title" in movies_df.columns:
@@ -477,9 +528,9 @@ if not filtered_charts_df.empty:
         )
         movie_sequels_dist["sequel_count"] = movie_sequels_dist["sequel_count"].astype(str)
 
-    # ==========================================
-    # RIGHT CHART: TV Show Season Durations
-    # ==========================================
+    # ============================
+    # RIGHT CHART: TV Show Seasons
+    # ============================
     tv_shows_df = filtered_charts_df[filtered_charts_df["type"].str.lower() == "tv show"].copy()
 
     if not tv_shows_df.empty and "duration" in tv_shows_df.columns:
@@ -501,20 +552,31 @@ col1, col2 = st.columns(2)
 
 # Left Column: Movie Sequels Bar Chart
 with col1:
-    st.write("#### Movie Franchise & Sequel Distribution")
+    st.write("#### Movies")
     if not movie_sequels_dist.empty:
+        # Limit to the top 5 largest categories by movie count
+        movie_sequels_dist_limited = (
+            movie_sequels_dist.sort_values(by="movie_count", ascending=False)
+            .head(5)
+            .copy()
+        )
+        # Re-sort by sequel count so the x-axis reads naturally (e.g., 0, 1, 2...)
+        movie_sequels_dist_limited["sequel_count_int"] = movie_sequels_dist_limited["sequel_count"].astype(int)
+        movie_sequels_dist_limited = movie_sequels_dist_limited.sort_values(by="sequel_count_int")
+
         fig_sequels = px.bar(
-            movie_sequels_dist,
+            movie_sequels_dist_limited,
             x="sequel_count",
             y="movie_count",
-            title="Number of Sequels per Film Title",
-            labels={"sequel_count": "Number of Sequels (0 = Standalone)", "movie_count": "Total Movies"},
+            title="Top 5 Sequels",
+            labels={"sequel_count": "No. of Sequels", "movie_count": "Total Movies"},
             color_discrete_sequence=["#E50914"]  # Netflix Red
         )
         fig_sequels.update_layout(
             xaxis=dict(type="category", showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
             yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
-            showlegend=False
+            showlegend=False,
+            margin=dict(t=50, b=50, l=50, r=20)
         )
         st.plotly_chart(fig_sequels, use_container_width=True)
     else:
@@ -522,24 +584,38 @@ with col1:
 
 # Right Column: TV Shows Duration Bar Chart
 with col2:
-    st.write("#### TV Shows Duration Distribution")
+    st.write("#### TV Shows")
     if not tv_duration_dist.empty:
+        # Limit to the first 5 seasonal lengths (Seasons 1 through 5)
+        tv_duration_dist_limited = (
+            tv_duration_dist.sort_values(by="seasons", key=lambda x: x.astype(int))
+            .head(5)
+            .copy()
+        )
+
         fig_tv_duration = px.bar(
-            tv_duration_dist,
+            tv_duration_dist_limited,
             x="seasons",
             y="tv_show_count",
-            title="TV Show Length by Total Seasons",
-            labels={"seasons": "Duration (Number of Seasons)", "tv_show_count": "Total TV Show Count"},
+            title="Top 5 Seasons",
+            labels={"seasons": "Number of Seasons", "tv_show_count": "Total TV Show Count"},
             color_discrete_sequence=["#00C853"]  # Green
         )
         fig_tv_duration.update_layout(
             xaxis=dict(type="category", showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
             yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
-            showlegend=False
+            showlegend=False,
+            margin=dict(t=50, b=50, l=50, r=20)
         )
         st.plotly_chart(fig_tv_duration, use_container_width=True)
     else:
         st.warning("No TV Show duration data available. Check if 'duration' column exists.")
+# Key observations below
+st.markdown("""
+**Key Observations:**
+1. **SEQUELS OF MOVIES:** 90% of movies on Netflix are standalone films.
+2. **SEASONS OF TV SHOWS:** Across the time range, 80% of TV Shows are 1 or 2 season runs.
+""")
 
 # 7. Distribution Charts
 st.markdown("---")

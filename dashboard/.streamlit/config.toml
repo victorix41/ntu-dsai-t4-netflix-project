@@ -5,7 +5,7 @@
 base = "light" # or dark theme
 primaryColor = "#E50914" # Set your desired color
 backgroundColor = "#eaeded9e"
-secondaryBackgroundColor = "#1c1c1c46" # sidebar background
+secondaryBackgroundColor = "#94898967" # sidebar background
 textColor = "#1C1C1C" # black text on white background
 secondaryTextColor = "#D3D3D3"     # white text on black sidebar
 font = "sans serif"    # limited choice of font types
