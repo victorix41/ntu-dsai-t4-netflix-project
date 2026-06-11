@@ -14,4 +14,3 @@ DBT_PROJECT_DIR = REPO_ROOT / "dbt_netflix"
 dbt_netflix_project = DbtProject(
     project_dir=os.fspath(DBT_PROJECT_DIR),
 )
-dbt_netflix_project.prepare_if_dev()
