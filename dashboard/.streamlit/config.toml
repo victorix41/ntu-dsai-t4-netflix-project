@@ -3,7 +3,7 @@
 # Corporate accent color (logo red)
 
 base = "light" # or dark theme
-primaryColor = "#E50914" # Set your desired color
+primaryColor = "#686868" # Set your desired color
 backgroundColor = "#eaeded9e"
 secondaryBackgroundColor = "#94898967" # sidebar background
 textColor = "#1C1C1C" # black text on white background
