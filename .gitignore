@@ -69,3 +69,11 @@ netflix_dagster/pipeline_logs/
 
 # Exclude raw local dataset files
 netflix_dagster/data/
+# Windows metadata / alternate data stream leftovers
+*:Zone.Identifier
+
+# Credential / key files
+*.json
+*key*.json
+*service-account*.json
+application_default_credentials.json
