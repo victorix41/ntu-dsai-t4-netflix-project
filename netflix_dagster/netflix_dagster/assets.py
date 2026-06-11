@@ -41,7 +41,6 @@ def extract_and_upload_to_gcs():
     
     # Clone the environment and explicitly point to your local user login file
     env_context = os.environ.copy()
-    env_context["GOOGLE_APPLICATION_CREDENTIALS"] = "$HOME/.config/ntu-dsai/ntu-dsai-netflix-runner-key.json"
     
     result = subprocess.run(["python", script_path], env=env_context, capture_output=True, text=True, cwd=REPO_ROOT)
     
@@ -64,7 +63,6 @@ def load_gcs_to_bigquery(extract_and_upload_to_gcs):
     start_time = datetime.now()
     
     env_context = os.environ.copy()
-    env_context["GOOGLE_APPLICATION_CREDENTIALS"] = "$HOME/.config/ntu-dsai/ntu-dsai-netflix-runner-key.json"
     
     result = subprocess.run(["python", script_path], env=env_context, capture_output=True, text=True, cwd=REPO_ROOT)
     

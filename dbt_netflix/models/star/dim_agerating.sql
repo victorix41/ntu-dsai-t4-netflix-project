@@ -1,4 +1,4 @@
 SELECT
         show_id,
-        rating
+        COALESCE(NULLIF(TRIM(rating), ''), 'Unknown') AS rating
     FROM {{ source('raw', 'netflix_titles') }}
