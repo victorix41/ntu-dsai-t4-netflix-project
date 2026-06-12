@@ -111,3 +111,9 @@ GitHub stores the recipe.
 requirements.txt stores the ingredient list.
 Each person's .venv is their own kitchen.
 Do not upload your kitchen to GitHub.
+
+## Project Repository
+
+Public repository URL: https://github.com/kennywong85/ntu-dsai-t4-netflix-project
+
+This repository contains the Module 2 Team 4 Netflix catalogue analytics project, including ingestion scripts, dbt transformation models, Dagster orchestration files, dashboard files, documentation and setup instructions.
